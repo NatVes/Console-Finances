@@ -86,3 +86,77 @@ var finances = [
   ['Jan-2017', 138230],
   ['Feb-2017', 671099],
 ];
+
+let finLength = finances.length;
+
+//the net total amount of Profit/Losses over the entire period
+let total = 0;
+for (let i=0; i<finLength; i++) {
+  total += finances[i][1]
+}
+
+// an array of all changes in Profit/Losses
+let changes = [];
+for (let i=0; i<=finLength-2; i++) {
+  changes.push(finances[i+1][1]-finances[i][1])   
+}
+// sum up all elements in the array
+let sumChanges = changes.reduce(function(a, b){
+  return a+b;
+}, 0);
+//find average of the changes in Profit/Losses
+let avrgChange = sumChanges/(finLength-1);
+
+//create an array of changes with the appropriate dates
+let dateChange = finances.slice(1).map((date, value) => {
+  return  [date[0], changes[value]]; 
+});
+
+//find the greatest increase in Profit/Losses over the entire period and its index in the array
+let maxIncreace = dateChange.reduce((prev, current, index) => {
+  if (current[1] > prev[1]) {
+    return [index, current[1]]
+  }  else {
+    return prev;
+  }
+}, [0, dateChange[0][1]]);
+//find the date for the greatest increase in Profit/Losses in the array of changes with the appropriate dates
+let dateMax = dateChange[maxIncreace[0]][0];
+
+//find the greatest decrease in Profit/Losses over the entire period and its index in the array
+let minDecrease = dateChange.reduce((prev, current, index) => {
+  if (current[1] < prev[1]) {
+    return [index, current[1]]
+  }  else {
+    return prev;
+  }
+}, [0, dateChange[0][1]]);
+//find the date for the greatest decrease in Profit/Losses in the array of changes with the appropriate dates
+let dateMin = dateChange[minDecrease[0]][0];
+
+console.log ("Financial Analysis" + "\n------------------" + "\nTotal Month: " + finLength + "\nTotal: $" + total + "\nAverage Change: " + avrgChange.toFixed(2) + "\nGreatest Increase in Profits/Losses: " + dateMax  + " ($" + maxIncreace[1] + ")" + "\nGreatest Decrease in Profits/Losses: " + dateMin + " ($" + minDecrease[1] + ")");
+
+//Alternative way finding the greatest decrease and increase in Profit/Losses and their indices in the array
+
+// let max = dateChange[0][1];
+// let indexMax = 0;
+// for (let i=0; i<dateChange.length; i++) {
+//   let value = dateChange[i][1];
+//   if (value > max) {
+//     max = value; 
+//     indexMax = i;
+//   }
+// }
+
+// let min = dateChange[0][1];
+// let indexMin = 0;
+// for (let i=0; i<dateChange.length; i++) {
+//   let value = dateChange[i][1];
+//   if (value < min) {
+//     min = value; 
+//     indexMin = i;
+//   }
+// }
+
+// console.log ("Financial Analysis" + "\n------------------" + "\nTotal Month: " + finLength + "\nTotal: $" + total + "\nAverage Change: " + avrgChange.toFixed(2) + "\nGreatest Increase in Profits/Losses: " + dateChange[indexMax][0]  + " ($" + max + ")" + "\nGreatest Decrease in Profits/Losses: " + dateChange[indexMin][0] + " ($" + min + ")");
+
